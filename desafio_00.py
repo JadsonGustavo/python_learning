@@ -8,7 +8,7 @@
 menu = """
 ==========================================
 
-    Bem vindo ao Banco JG. Digital
+    Bem vindo ao Banco JG Digital
 
 ==========================================
 Escolha uma das opções abaixo de 1 à 4
