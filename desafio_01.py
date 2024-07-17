@@ -64,7 +64,7 @@ def Extrato():
     print("\n==========================================")
     print(                "Extrato"                 )
     print("Não foram realizadas movimentações" if not extrato else extrato)
-    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("\nSaldo: R$ "+ fsaldo+".")
     print("==========================================")
     while True:
         voltar = input("\nPara voltar ao menu principal digite '0', se deseja encerrar digite '1': ")
@@ -92,6 +92,8 @@ def Deposito():
     global limite_saques
     global cliente
     global conta
+    global fvalor
+    global fsaldo
     global z
     z = ""
 
@@ -103,6 +105,7 @@ def Deposito():
         else:
             if valor.find(",") > 0:
                 #No VSCode não estava funcionando a função replace()
+                fvalor = valor
                 x = len(valor)
                 y = valor.find(",")
                 z = valor[0:y] + "."+ valor[y+1:x]
@@ -116,8 +119,15 @@ def Deposito():
                 continue
         if valor > 0:
             saldo += float(valor)
-            extrato += f"Depósito: R$ {valor:.2f}."
-            print("\nDepósito:", f"R$ {valor:.2f}.", " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
+            fsaldo = str(saldo)
+            print(fsaldo)
+            if fsaldo.find(","):
+                x = len(fsaldo)
+                y = fsaldo.find(".")
+                z = fsaldo[0:y] + ","+ fsaldo[y+1:x]
+                fsaldo = z
+            extrato += "Depósito: R$ "+fvalor+"."
+            print("\nDepósito: R$ "+fvalor+", seu novo saldo agora é: R$ "+fsaldo+".")
             while2 = 0
             while while2 == 0:
                 voltar = input("\nPara realizar a operação novamente digite '0', menu principal digite '1', encerrar digite '2': ")
@@ -174,6 +184,11 @@ def Saque():
     global limite_saques
     global cliente
     global conta
+    global fsaldo
+    global fvalor
+
+    fsaldo = ""
+    fvalor = ""
 
     while1 = 0
     while while1 == 0:
@@ -183,6 +198,7 @@ def Saque():
         else:
             if valor.find(",") > 0:
                 #No VSCode não estava funcionando a função replace()
+                fvalor = valor
                 x = len(valor)
                 y = valor.find(",")
                 z = valor[0:y] + "."+ valor[y+1:x]
@@ -196,7 +212,12 @@ def Saque():
         
         if saldo == 0:
             while2 = 0
-            print("Operação falhou! Você não tem saldo." f" Saldo: R$ {saldo:.2f}")
+            if saldo.find(","):
+                x = len(saldo)
+                y = saldo.find(".")
+                z = saldo[0:y] + ","+ saldo[y+1:x]
+                fsaldo = z
+            print("Operação falhou! Você não tem saldo.  Saldo: R$ " + fsaldo)
             while while2 == 0:
                 print("Menu principal digite '0', encerrar digite '1': ")
                 voltar = input()
@@ -291,11 +312,18 @@ def Saque():
         elif valor > 0 and valor <= limite:
             while2 = 0
             saldo -= valor
-            extrato += f"\nSaque: R$ {valor:.2f}."
-            valores = f"R$ {valor:.2f}."
+            if valor.find("."):
+                x = len(valor)
+                y = valor.find(".")
+                z = valor[0:y] + ","+ valor[y+1:x]
+                fvalor = z
+            extrato += "\nSaque: R$ " +fvalor+"."
+            valores = "R$ "+fvalor +"."
+            #valores = f"R$ {valor:.2f}."
             numero_saques += 1
             saquesrestantes = limite_saques - numero_saques
-            print("\nVocê sacou",valores, " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
+            print("\nVocê sacou "+valores+" Seu novo saldo agora é: R$"+fsaldo+".")
+            #print("\nVocê sacou",valores, " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
             if saquesrestantes == 1:
                 print("Você ainda possui", saquesrestantes,"saque.")
             else:
@@ -492,27 +520,26 @@ def Logar(usuarios):
                             Sair()
                         else:
                             continue
-
-        else:
-            print("Usuário não cadastrado.")
-            while2 = 0
-            while while2 == 0:
-                print("\nO que você deseja fazer?")
-                voltar = input("Tentar Novamente digite '0', Fazer Login digite '1'. Encerrar digite '2': ")
-                if voltar.isdigit() == True:
-                    voltar = int(voltar[0])
-                else:
-                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+            else:
+                print("Usuário não cadastrado.")
+                while2 = 0
+                while while2 == 0:
+                    print("\nO que você deseja fazer?")
+                    voltar = input("Tentar Novamente digite '0', Fazer Login digite '1'. Encerrar digite '2': ")
+                    if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
-                        print("\nDigite apenas valores númericos")
-                        voltar = 100
-                if voltar == 0:
-                    Logar(usuarios)
-                elif voltar == 1:
-                    Cadastrar(usuarios)
-                else:
-                    exit()
+                        if voltar.find(",") > 0 or voltar.find(".") > 0:
+                            voltar = int(voltar[0])
+                        else:
+                            print("\nDigite apenas valores númericos")
+                            voltar = 100
+                    if voltar == 0:
+                        Logar(usuarios)
+                    elif voltar == 1:
+                        Cadastrar(usuarios)
+                    else:
+                        exit()
 
 def Cadastrar(usuarios):
     global cadastro
@@ -577,7 +604,7 @@ CPF: """
                 while2 = 0
                 while while2 == 0:
                     opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
-                    if opcao.isdigit() == True:
+                    if opcao.isdigit() == True and opcao <= int(2):
                         opcao = int(opcao[0])
                     else:
                         if opcao.find(",") > 0 or opcao.find(".") > 0:
@@ -591,7 +618,7 @@ CPF: """
                         while2 = 0
                         while while2 == 0:
                             opcao = input("Fazer Login digite '0', Realizar Novo Cadastro digite '1', Encerrar digite '2': ")
-                            if opcao.isdigit() == True:
+                            if (opcao.isdigit() == True and opcao <= 2):
                                 opcao = int(opcao[0])
                             else:
                                 if opcao.find(",") > 0 or opcao.find(".") > 0:
@@ -604,7 +631,7 @@ CPF: """
                             elif opcao == 1:
                                 Cadastrar(usuarios)
                             else:
-                                exit()
+                                continue
                     elif opcao == 1:
                         Cadastrar(usuarios)
                     else:
