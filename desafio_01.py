@@ -102,6 +102,7 @@ def Deposito():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
+                #No VSCode não estava funcionando a função replace()
                 x = len(valor)
                 y = valor.find(",")
                 z = valor[0:y] + "."+ valor[y+1:x]
@@ -181,6 +182,7 @@ def Saque():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
+                #No VSCode não estava funcionando a função replace()
                 x = len(valor)
                 y = valor.find(",")
                 z = valor[0:y] + "."+ valor[y+1:x]
