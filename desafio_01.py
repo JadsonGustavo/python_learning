@@ -10,9 +10,12 @@ def Variaveis():
     global cod_cliente
     global cod_conta
     global nome_de_usuario
-    global Nome_completo
+    global nome_completo
     global senha
     global email
+    global cpf
+    global senha
+    global repetirsenha
 
     opcao = 0
     saldo = 0.00
@@ -22,11 +25,15 @@ def Variaveis():
     limite_saques = 3
     cliente = []
     conta = []
+    cod = 0
+    cpf = 0
     cod_usuario = ""
     nome_de_usuario = ""
     senha = ""
     email = ""
-    
+    senha = ""
+    repetirsenha = ""
+
 def Menu():
     menu = """
     ==========================================
@@ -99,7 +106,7 @@ def Deposito():
                 continue
         if valor > 0:
             saldo += float(valor)
-            extrato += f"Depósito: R$ {valor:.2f}"
+            extrato += f"Depósito: R$ {valor:.2f}."
             print("\nDepósito:", f"R$ {valor:.2f}.", " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
             while2 = 0
             while while2 == 0:
@@ -197,7 +204,7 @@ def Saque():
                     continue
         elif excedeu_limite:
             while2 = 0
-            print("\nOperação falhou! Você só pode realizar o saque de até R$500,00.")
+            print("\nOperação falhou! Você só pode realizar o saque de até R$500,00 por vez.")
             while while2 == 0:
                 voltar = input("Para realizar a operação novamente digite '0', menu principal digite '1', encerrar digite '2': ")
                 if voltar.isdigit() == True:
@@ -270,7 +277,7 @@ def Saque():
         elif valor > 0 and valor <= limite:
             while2 = 0
             saldo -= valor
-            extrato += f"Saque: R$ {valor:.2f}.\n"
+            extrato += f"\nSaque: R$ {valor:.2f}."
             valores = f"R$ {valor:.2f}."
             numero_saques += 1
             saquesrestantes = limite_saques - numero_saques
@@ -350,155 +357,9 @@ def Inicio():
     [2] Cadastrar
     ==========================================
     =>"""
+
     opcao = input(inicio)
     return opcao
-
-def Login():
-    global cliente
-    global conta
-    global cod_cliente
-    global cod_conta
-    global nome_de_usuario
-    global senha
-    global email
-    global login
-    global inicio
-
-    login = """
-
-    ==========================================
-    Banco JG Digital
-
-                      LOGIN
-
-    ==========================================
-    Usuário:[                    ]
-      Senha:[                    ]
-    ==========================================
-    Email ou CPF: """
-    
-    nome_de_usuario = input(login)
-    return nome_de_usuario
-
-def Cadastro():
-    global cliente
-    global conta
-    global cod_cliente
-    global cod_conta
-    global nome_de_usuario
-    global senha
-    global email
-    global login
-    global inicio
-    global cadastro
-    global Nome_completo
-    cadastro = """
-
-    ==========================================
-    Banco JG Digital
-
-                    CADASTRO
-
-    ==========================================
-    Nome Completo:[                    ]
-              CPF:[                    ]
-            Email:[                    ]
-            Senha:[                    ]
-    ==========================================
-    Nome Completo: """
-    
-    Nome_completo = input(cadastro)
-    return Nome_completo
-
-def Cadastrar():
-
-    Variaveis()
-
-    while True:
-        #Recebe o valor
-        Nome_completo = Login()
-        #Analisa se o valor digitado é númerico
-        
-        if Nome_completo.isdigit() == True:
-            opcao = int(opcao)
-
-        elif Nome_completo.find("@") > 0:
-            if Nome_completo.find(".com") <= 0 or Nome_completo.find(".com.br") <= 0:
-                print("Email inválido")
-            else:
-                print("\nDigite apenas valores númericos")
-                Nome_completo = 100
-        if Nome_completo == 1:
-            Main()
-        elif Nome_completo == 2:
-            Cadastrar()
-        else:
-            print("\nOperação inválida, por favor selicione uma opção válida.")
-            continue
-    
-def Acessar():
-
-    Variaveis()
-
-    while True:
-        #Recebe o valor
-        nome_de_usuario = Login()
-        #Analisa se o valor digitado é númerico
-        
-        if nome_de_usuario.isdigit() == True:
-            opcao = int(opcao)
-
-        elif nome_de_usuario.find("@") > 0:
-            if nome_de_usuario.find(".com") <= 0 or nome_de_usuario.find(".com.br") <= 0:
-                print("Email inválido")
-            else:
-                print("\nDigite apenas valores númericos")
-                nome_de_usuario = 100
-        if nome_de_usuario == 1:
-            Main()
-        elif nome_de_usuario == 2:
-            Cadastrar()
-        else:
-            print("\nOperação inválida, por favor selicione uma opção válida.")
-            continue
-
-def Iniciar():
-
-    Variaveis()
-
-    while True:
-        #Recebe o valor
-        opcao = Inicio()
-        #Analisa se o valor digitado é númerico
-        
-        if opcao.isdigit() == True:
-            #transforma o valor digitado apenas no primeiro digito
-            opcao = int(opcao[0])
-        else:
-            #Procura por virgula ou ponto
-            if opcao.find(",") > 0 or opcao.find(".") > 0:
-                opcao = int(opcao[0])
-            else:
-                print("\nDigite apenas valores númericos")
-                opcao = 100
-        if int(opcao) == 1:
-            Acessar()
-        elif opcao == 2:
-            Cadastrar()
-        else:
-            print("\nOperação inválida, por favor selicione uma opção válida.")
-            continue
-
-Iniciar()    
-
-def Cadastro():
-    print("")
-
-def Usuarios():
-    print("")
-
-def ContaBancaria():
-    print("")
 
 def Main():
 
@@ -531,4 +392,254 @@ def Main():
             print("\nOperação inválida, por favor selicione uma opção válida.")
             continue
 
-Main()
+def recuperar_senha(usuarios):
+    print(f"\nCPF: {cpf}")
+    nome_completo = input('Nome Completo: ')
+    email = input('E-mail: ')
+    usuario = filtrar_nome_completo_e_email(nome_completo, email, senha, usuarios)
+    if usuario:
+        print(f'\nSenha: {usuario["Senha"]}')
+        print("Isso é considerado uma falha de segurança e é considerado uma prática ruim, está aqui apenas para fins didáticos")
+        
+        while2 = 0
+        while while2 == 0:
+            print("\nO que você deseja fazer agora?")
+            voltar = input("Fazer Login digite '0', Tela de Boas-Vindas digite '1' Encerrar digite '2': ")
+            if voltar.isdigit() == True:
+                voltar = int(voltar[0])
+            else:
+                if voltar.find(",") > 0 or voltar.find(".") > 0:
+                    voltar = int(voltar[0])
+                else:
+                    print("\nDigite apenas valores númericos")
+                    voltar = 100
+            if voltar == 0:
+                Logar(usuarios)
+            elif voltar == 1:
+                return
+            else:
+                exit()
+
+def Logar(usuarios):
+    global cliente
+    global conta
+    global cod_cliente
+    global cod_conta
+    global nome_de_usuario
+    global senha
+    global email
+    global login
+    global inicio
+    global cpf
+    global teste
+    teste = ""
+
+    login = """
+
+    \n\n==========================================
+    Banco JG Digital
+
+                      LOGIN
+
+    ==========================================
+    Usuário:[                    ]
+      Senha:[                    ]
+    ==========================================
+    Email ou cpf: """
+
+    while True:
+        cpf = input(login)
+        email = cpf
+        usuario = filtrar_email_ou_cpf(cpf, email, usuarios)
+        while True:
+            if usuario:
+                senha = input("    Senha: ")
+                usuario = filtrar_email_ou_cpf_e_senha(cpf, email, senha, usuarios)
+                if usuario:
+                    Main()
+                else:
+                    print("\nSenha incorreta.")
+                    while2 = 0
+                    while while2 == 0:
+                        voltar = input("Tentar Novamente digite '0', Recuperar a senha digite '1'. Encerrar digite '2': ")
+                        if voltar.isdigit() == True:
+                            voltar = int(voltar[0])
+                        else:
+                            if voltar.find(",") > 0 or voltar.find(".") > 0:
+                                voltar = int(voltar[0])
+                            else:
+                                print("\nDigite apenas valores númericos")
+                                voltar = 100
+                        if voltar == 0:
+                            Logar(usuarios)
+                        elif voltar == 1:
+                            recuperar_senha(usuarios)
+                        elif voltar == 2:
+                            Sair()
+                        else:
+                            continue
+
+        else:
+            print("Usuário não cadastrado.")
+            while2 = 0
+            while while2 == 0:
+                print("\nO que você deseja fazer?")
+                voltar = input("Tentar Novamente digite '0', Fazer Login digite '1'. Encerrar digite '2': ")
+                if voltar.isdigit() == True:
+                    voltar = int(voltar[0])
+                else:
+                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+                        voltar = int(voltar[0])
+                    else:
+                        print("\nDigite apenas valores númericos")
+                        voltar = 100
+                if voltar == 0:
+                    Logar(usuarios)
+                elif voltar == 1:
+                    Cadastrar(usuarios)
+                else:
+                    exit()
+
+def Cadastrar(usuarios):
+    global cadastro
+    global cod
+
+    cod = 0
+    cadastro = """
+    
+
+    ==========================================
+    Banco JG Digital
+
+                    CADASTRO
+
+    ==========================================
+              CPF:[                    ]
+    Nome Completo:[                    ]
+            Email:[                    ]
+            Senha:[                    ]
+    ==========================================
+CPF: """
+
+    while True:
+        cpf = input(cadastro)
+        usuario = filtrar_cpf(cpf, usuarios)
+
+        if usuario:
+            while2 = 0
+            while while2 == 0:
+                print("\nCPF já cadastrado. O que você deseja fazer?")
+                voltar = input("Fazer Login digite '0', Recuperar a Senha digite '1'. Encerrar digite '2': ")
+                if voltar.isdigit() == True:
+                    voltar = int(voltar[0])
+                else:
+                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+                        voltar = int(voltar[0])
+                    else:
+                        print("\nDigite apenas valores númericos")
+                        voltar = 100
+                if voltar == 0:
+                    Logar()
+                elif voltar == 1:
+                    recuperar_senha(usuarios)
+                elif voltar == 2:
+                    Sair()
+                else:
+                    continue
+
+        nome_completo = input('Nome Completo: ')
+        email = input('E-mail: ')
+
+
+        while True:
+            senha = input("Digite uma senha: ")
+            repetirsenha = input("Repita a senha: ")
+
+            if senha == repetirsenha:
+                cod = cod + 1
+                print(f'\nCPF: {cpf}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
+
+                print("Os dados estão corretos?")       
+                while2 = 0
+                while while2 == 0:
+                    opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
+                    if opcao.isdigit() == True:
+                        opcao = int(opcao[0])
+                    else:
+                        if opcao.find(",") > 0 or opcao.find(".") > 0:
+                            opcao = int(opcao[0])
+                        else:
+                            print("\nDigite apenas valores númericos")
+                            opcao = 100
+                    if opcao == 0:
+                        usuarios.append({"CPF": cpf, "Nome Completo":nome_completo, "E-mail":email, "Senha":senha})
+                        print("\nUsuário cadastrado com sucesso!")      
+                        while2 = 0
+                        while while2 == 0:
+                            opcao = input("Fazer Login digite '0', Realizar Novo Cadastro digite '1', Encerrar digite '2': ")
+                            if opcao.isdigit() == True:
+                                opcao = int(opcao[0])
+                            else:
+                                if opcao.find(",") > 0 or opcao.find(".") > 0:
+                                    opcao = int(opcao[0])
+                                else:
+                                    print("\nDigite apenas valores númericos")
+                                    opcao = 100
+                            if opcao == 0:
+                                Logar(usuarios)
+                            elif opcao == 1:
+                                Cadastrar(usuarios)
+                            else:
+                                exit()
+                    elif opcao == 1:
+                        Cadastrar(usuarios)
+                    else:
+                        exit()
+                    continue
+            else:
+                print("\nSenhas não conferem")
+                continue 
+
+def filtrar_cpf(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def filtrar_nome_completo_e_email(nome_completo, email, senha, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["Nome Completo"] == nome_completo and usuario["E-mail"] == email]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def filtrar_email_ou_cpf(cpf, email, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf or usuario["E-mail"] == email]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def filtrar_email_ou_cpf_e_senha(cpf, email, senha, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if (usuario["CPF"] == cpf or usuario["E-mail"] == email) and usuario["Senha"] == senha]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def Iniciar():
+
+    usuarios = []
+
+    while True:
+        #Recebe o valor
+        opcao = Inicio()
+        #Analisa se o valor digitado é númerico
+        
+        if opcao.isdigit() == True:
+            #transforma o valor digitado apenas no primeiro digito
+            opcao = int(opcao[0])
+        else:
+            #Procura por virgula ou ponto
+            if opcao.find(",") > 0 or opcao.find(".") > 0:
+                opcao = int(opcao[0])
+            else:
+                print("\nDigite apenas valores númericos")
+                opcao = 100
+        if int(opcao) == 1:
+            Logar(usuarios)
+        elif opcao == 2:
+            Cadastrar(usuarios)
+        else:
+            print("\nOperação inválida, por favor selicione uma opção válida.")
+            continue
+Iniciar()
