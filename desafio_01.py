@@ -92,6 +92,8 @@ def Deposito():
     global limite_saques
     global cliente
     global conta
+    global z
+    z = ""
 
     while1 = 0
     while while1 == 0:
@@ -100,7 +102,14 @@ def Deposito():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
-                valor = float(valor.raplace(",","."))
+                x = len(valor)
+                y = valor.find(",")
+                z = valor[0:y] + "."+ valor[y+1:x]
+                valor = float(z)
+
+            elif valor.find(".") > 0:
+                valor = float(valor)
+
             else:
                 print("\nDigite apenas valores númericos")
                 continue
@@ -172,7 +181,10 @@ def Saque():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
-                valor = float(valor.raplace(",","."))
+                x = len(valor)
+                y = valor.find(",")
+                z = valor[0:y] + "."+ valor[y+1:x]
+                valor = float(z)
             else:
                 print("\nDigite apenas valores númericos")
                 continue
