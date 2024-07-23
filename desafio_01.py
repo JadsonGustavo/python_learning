@@ -64,7 +64,7 @@ def Extrato():
     print("\n==========================================")
     print(                "Extrato"                 )
     print("Não foram realizadas movimentações" if not extrato else extrato)
-    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("\nSaldo: R$ "+ fsaldo+".")
     print("==========================================")
     while True:
         voltar = input("\nPara voltar ao menu principal digite '0', se deseja encerrar digite '1': ")
@@ -92,6 +92,10 @@ def Deposito():
     global limite_saques
     global cliente
     global conta
+    global fvalor
+    global fsaldo
+    global z
+    z = ""
 
     while1 = 0
     while while1 == 0:
@@ -100,14 +104,30 @@ def Deposito():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
-                valor = float(valor.raplace(",","."))
+                #No VSCode não estava funcionando a função replace()
+                fvalor = valor
+                x = len(valor)
+                y = valor.find(",")
+                z = valor[0:y] + "."+ valor[y+1:x]
+                valor = float(z)
+
+            elif valor.find(".") > 0:
+                valor = float(valor)
+
             else:
                 print("\nDigite apenas valores númericos")
                 continue
         if valor > 0:
             saldo += float(valor)
-            extrato += f"Depósito: R$ {valor:.2f}."
-            print("\nDepósito:", f"R$ {valor:.2f}.", " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
+            fsaldo = str(saldo)
+            print(fsaldo)
+            if fsaldo.find(","):
+                x = len(fsaldo)
+                y = fsaldo.find(".")
+                z = fsaldo[0:y] + ","+ fsaldo[y+1:x]
+                fsaldo = z
+            extrato += "Depósito: R$ "+fvalor+"."
+            print("\nDepósito: R$ "+fvalor+", seu novo saldo agora é: R$ "+fsaldo+".")
             while2 = 0
             while while2 == 0:
                 voltar = input("\nPara realizar a operação novamente digite '0', menu principal digite '1', encerrar digite '2': ")
@@ -164,6 +184,11 @@ def Saque():
     global limite_saques
     global cliente
     global conta
+    global fsaldo
+    global fvalor
+
+    fsaldo = ""
+    fvalor = ""
 
     while1 = 0
     while while1 == 0:
@@ -172,7 +197,12 @@ def Saque():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
-                valor = float(valor.raplace(",","."))
+                #No VSCode não estava funcionando a função replace()
+                fvalor = valor
+                x = len(valor)
+                y = valor.find(",")
+                z = valor[0:y] + "."+ valor[y+1:x]
+                valor = float(z)
             else:
                 print("\nDigite apenas valores númericos")
                 continue
@@ -182,7 +212,12 @@ def Saque():
         
         if saldo == 0:
             while2 = 0
-            print("Operação falhou! Você não tem saldo." f" Saldo: R$ {saldo:.2f}")
+            if saldo.find(","):
+                x = len(saldo)
+                y = saldo.find(".")
+                z = saldo[0:y] + ","+ saldo[y+1:x]
+                fsaldo = z
+            print("Operação falhou! Você não tem saldo.  Saldo: R$ " + fsaldo)
             while while2 == 0:
                 print("Menu principal digite '0', encerrar digite '1': ")
                 voltar = input()
@@ -277,11 +312,18 @@ def Saque():
         elif valor > 0 and valor <= limite:
             while2 = 0
             saldo -= valor
-            extrato += f"\nSaque: R$ {valor:.2f}."
-            valores = f"R$ {valor:.2f}."
+            if valor.find("."):
+                x = len(valor)
+                y = valor.find(".")
+                z = valor[0:y] + ","+ valor[y+1:x]
+                fvalor = z
+            extrato += "\nSaque: R$ " +fvalor+"."
+            valores = "R$ "+fvalor +"."
+            #valores = f"R$ {valor:.2f}."
             numero_saques += 1
             saquesrestantes = limite_saques - numero_saques
-            print("\nVocê sacou",valores, " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
+            print("\nVocê sacou "+valores+" Seu novo saldo agora é: R$"+fsaldo+".")
+            #print("\nVocê sacou",valores, " Seu novo saldo agora é:", f"R$ {saldo:.2f}.")
             if saquesrestantes == 1:
                 print("Você ainda possui", saquesrestantes,"saque.")
             else:
@@ -478,32 +520,37 @@ def Logar(usuarios):
                             Sair()
                         else:
                             continue
-
-        else:
-            print("Usuário não cadastrado.")
-            while2 = 0
-            while while2 == 0:
-                print("\nO que você deseja fazer?")
-                voltar = input("Tentar Novamente digite '0', Fazer Login digite '1'. Encerrar digite '2': ")
-                if voltar.isdigit() == True:
-                    voltar = int(voltar[0])
-                else:
-                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+            else:
+                print("Usuário não cadastrado.")
+                while2 = 0
+                while while2 == 0:
+                    print("\nO que você deseja fazer?")
+                    voltar = input("Tentar Novamente digite '0', Cadastrar-se digite '1'. Encerrar digite '2': ")
+                    if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
-                        print("\nDigite apenas valores númericos")
-                        voltar = 100
-                if voltar == 0:
-                    Logar(usuarios)
-                elif voltar == 1:
-                    Cadastrar(usuarios)
-                else:
-                    exit()
+                        if voltar.find(",") > 0 or voltar.find(".") > 0:
+                            voltar = int(voltar[0])
+                        else:
+                            print("\nDigite apenas valores númericos")
+                            voltar = 100
+                    if voltar == 0:
+                        Logar(usuarios)
+                    elif voltar == 1:
+                        Cadastrar(usuarios)
+                    else:
+                        exit()
 
 def Cadastrar(usuarios):
     global cadastro
     global cod
+    global caracteres_permitidos_no_email
+    global caracteres_permitidos_no_nome
+    global nome_completo_resultante
+    global emailresultante
 
+    caracteres_permitidos_no_email = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    caracteres_permitidos_no_nome = ['\'', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ']
     cod = 0
     cadastro = """
     
@@ -524,6 +571,7 @@ CPF: """
     while True:
         cpf = input(cadastro)
         usuario = filtrar_cpf(cpf, usuarios)
+
 
         if usuario:
             while2 = 0
@@ -547,9 +595,38 @@ CPF: """
                 else:
                     continue
 
-        nome_completo = input('Nome Completo: ')
-        email = input('E-mail: ')
 
+        while True:
+            nome_completo = input('Nome Completo: ')
+            converter_string_em_lista(nome_completo)
+
+            lista1 = []
+            lista1 = lista
+
+            nome_completo_resultante = [x for x in lista1 if x not in caracteres_permitidos_no_nome]
+
+            if len(nome_completo_resultante) == 0:
+                break
+            else:
+                print("\nVocê digitou caracteres inválidos.")
+                continue
+
+        while True:
+            email = input('E-mail: ')
+            converter_string_em_lista(email)
+
+            lista1 = []
+            lista1 = lista
+
+            emailresultante = [x for x in lista1 if x not in caracteres_permitidos_no_email]
+
+            if email.find("@") > 0 and email.find(".com") > 0 and email[email.find(".com")+1] != ".":
+                break
+            elif email.find("@") > 0 and email.find(".com.br") > 0 and email[email.find(".com")+1] != ".":
+                break  
+            else:
+                print("\nO domínio do e-mail não foi informado ou não é aceito. Exemplo: @dominio.com ou @dominio.com.br")
+                continue
 
         while True:
             senha = input("Digite uma senha: ")
@@ -558,19 +635,25 @@ CPF: """
             if senha == repetirsenha:
                 cod = cod + 1
                 print(f'\nCPF: {cpf}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
-
-                print("Os dados estão corretos?")       
+     
                 while2 = 0
                 while while2 == 0:
+                    print("Os dados estão corretos?")  
                     opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
                     if opcao.isdigit() == True:
-                        opcao = int(opcao[0])
+                        if int(opcao) <= int(2):
+                            opcao = int(opcao[0])
+                        else:
+                            print("\nOpção inválida. Digite uma opção válida!")
+                            continue
                     else:
                         if opcao.find(",") > 0 or opcao.find(".") > 0:
                             opcao = int(opcao[0])
                         else:
                             print("\nDigite apenas valores númericos")
                             opcao = 100
+                            continue
+
                     if opcao == 0:
                         usuarios.append({"CPF": cpf, "Nome Completo":nome_completo, "E-mail":email, "Senha":senha})
                         print("\nUsuário cadastrado com sucesso!")      
@@ -578,7 +661,11 @@ CPF: """
                         while while2 == 0:
                             opcao = input("Fazer Login digite '0', Realizar Novo Cadastro digite '1', Encerrar digite '2': ")
                             if opcao.isdigit() == True:
-                                opcao = int(opcao[0])
+                                if int(opcao) <= int(2):
+                                    opcao = int(opcao[0])
+                                else:
+                                    print("\nOpção inválida. Digite uma opção válida!")
+                                    continue
                             else:
                                 if opcao.find(",") > 0 or opcao.find(".") > 0:
                                     opcao = int(opcao[0])
@@ -590,7 +677,7 @@ CPF: """
                             elif opcao == 1:
                                 Cadastrar(usuarios)
                             else:
-                                exit()
+                                continue
                     elif opcao == 1:
                         Cadastrar(usuarios)
                     else:
@@ -607,6 +694,12 @@ def filtrar_cpf(cpf, usuarios):
 def filtrar_nome_completo_e_email(nome_completo, email, senha, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["Nome Completo"] == nome_completo and usuario["E-mail"] == email]
     return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def converter_string_em_lista(string):
+    global lista
+    lista = []
+    for elemento in string:
+       lista.append(str(elemento))
 
 def filtrar_email_ou_cpf(cpf, email, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf or usuario["E-mail"] == email]
