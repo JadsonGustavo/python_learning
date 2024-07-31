@@ -177,15 +177,16 @@ def Deposito():
                     continue
 
 def Saque():
-    global extrato
-    global saldo
-    global limite
-    global numero_saques
-    global limite_saques
-    global cliente
     global conta
+    global cliente
+    global excedeu_saldo
+    global extrato
     global fsaldo
     global fvalor
+    global limite
+    global limite_saques
+    global numero_saques
+    global saldo
 
     fsaldo = ""
     fvalor = ""
@@ -197,7 +198,7 @@ def Saque():
             valor = float(valor)
         else:
             if valor.find(",") > 0:
-                #No VSCode não estava funcionando a função replace()
+                #No VSCode não estava funcionando a função replace() para alterar letra
                 fvalor = valor
                 x = len(valor)
                 y = valor.find(",")
@@ -301,6 +302,7 @@ def Saque():
                 if voltar == 0:
                     while2 = 1
                     pass
+                #Sair dos 2 loops
                 elif voltar == 1:
                     while1 = 1
                     while2 = 1
@@ -548,9 +550,14 @@ def Cadastrar(usuarios):
     global caracteres_permitidos_no_nome
     global nome_completo_resultante
     global emailresultante
+    global caracteres_nao_permitidos_no_nome
+    global string_1
 
     caracteres_permitidos_no_email = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     caracteres_permitidos_no_nome = ['\'', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ']
+    caracteres_nao_permitidos_no_nome = ""
+    nome_completo_resultante = ""
+    string_1 = ""
     cod = 0
     cadastro = """
     
@@ -594,7 +601,7 @@ CPF: """
                     Sair()
                 else:
                     continue
-
+        
 
         while True:
             nome_completo = input('Nome Completo: ')
@@ -603,10 +610,29 @@ CPF: """
             lista1 = []
             lista1 = lista
 
-            nome_completo_resultante = [x for x in lista1 if x not in caracteres_permitidos_no_nome]
+            caracteres_nao_permitidos_no_nome = [x for x in lista1 if x not in caracteres_permitidos_no_nome]
 
-            if len(nome_completo_resultante) == 0:
-                break
+            if len(caracteres_nao_permitidos_no_nome) == 0:
+                converter_lista_em_string(lista1)
+                nome_completo_resultante = string
+
+                global buscar_espaco
+                global buscar_espaco_1
+                global buscar_depois_do_espaco
+                global buscar_depois_do_espaco_1
+                
+                buscar_espaco = nome_completo_resultante.find(" ")
+                try: buscar_espaco_1 = nome_completo_resultante[buscar_espaco]
+                except: buscar_espaco = 0
+
+                buscar_depois_do_espaco = buscar_espaco+1
+                try: buscar_depois_do_espaco_1 = nome_completo_resultante[buscar_depois_do_espaco]
+                except: buscar_depois_do_espaco = 0
+
+                if buscar_espaco > 0 and buscar_depois_do_espaco > 0:
+                    break
+                else:
+                    print("\nVocê não digitou seu nome completo, digite seu nome completo.")
             else:
                 print("\nVocê digitou caracteres inválidos.")
                 continue
@@ -620,9 +646,9 @@ CPF: """
 
             emailresultante = [x for x in lista1 if x not in caracteres_permitidos_no_email]
 
-            if email.find("@") > 0 and email.find(".com") > 0 and email[email.find(".com")+1] != ".":
+            if email.find("@") > 0 and email.find(".com") > 0 and email[email.find(".com")-1] != "@":
                 break
-            elif email.find("@") > 0 and email.find(".com.br") > 0 and email[email.find(".com")+1] != ".":
+            elif email.find("@") > 0 and email.find(".com.br") > 0 and email[email.find(".com")-1] != "@":
                 break  
             else:
                 print("\nO domínio do e-mail não foi informado ou não é aceito. Exemplo: @dominio.com ou @dominio.com.br")
@@ -700,6 +726,16 @@ def converter_string_em_lista(string):
     lista = []
     for elemento in string:
        lista.append(str(elemento))
+    return lista
+
+def converter_lista_em_string(lista):
+    global string
+    string = ""
+    x = 0
+    while x < len(lista):
+        string = string + lista[x]
+        x += 1
+    return string
 
 def filtrar_email_ou_cpf(cpf, email, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf or usuario["E-mail"] == email]
