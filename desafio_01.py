@@ -594,7 +594,7 @@ CPF: """
                         print("\nDigite apenas valores númericos")
                         voltar = 100
                 if voltar == 0:
-                    Logar()
+                    Logar(usuarios)
                 elif voltar == 1:
                     recuperar_senha(usuarios)
                 elif voltar == 2:
@@ -655,14 +655,30 @@ CPF: """
                 continue
 
         while True:
-            senha = input("Digite uma senha: ")
-            repetirsenha = input("Repita a senha: ")
+            senha = str(input("""Digite uma senha com os seguintes critérios:"
+- Ao menos 8 digitos
+- Ao menos uma letra MAIÚSCULA(A à Z)
+- Ao menos um número de (0 à 9)
+- Ao menos um caractere especial(! @ # $ % ¨ & *)\n
+Senha:"""))
 
+            while len(senha) <= 7:
+                senha = input("A senha deve conter pelo menos 8 caracteres. Tente novamente:\nSenha:")            
+            while senha.islower():
+                senha = input("A senha deve conter pelo menos uma letra MAIUSCULA. Tente novamente:\nSenha:")
+            while senha.isupper():
+                senha = input("A senha deve conter pelo menos uma letra MINUSCULA. Tente novamente:\nSenha:")
+            while senha.isalpha():
+                senha = input("A senha deve conter pelo menos um número. Tente novamente:\nSenha:")
+            while senha.isalnum():
+                senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:")    
+            repetirsenha = input("Repita a senha para confirmar: ")
             if senha == repetirsenha:
                 cod = cod + 1
                 print(f'\nCPF: {cpf}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
-     
+                
                 while2 = 0
+                
                 while while2 == 0:
                     print("Os dados estão corretos?")  
                     opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
@@ -771,4 +787,4 @@ def Iniciar():
         else:
             print("\nOperação inválida, por favor selicione uma opção válida.")
             continue
-Iniciar()
+Iniciar(
