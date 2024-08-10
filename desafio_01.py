@@ -505,7 +505,7 @@ def Logar(usuarios):
                     print("\nSenha incorreta.")
                     while2 = 0
                     while while2 == 0:
-                        voltar = input("Tentar Novamente digite '0', Recuperar a senha digite '1'. Encerrar digite '2': ")
+                        voltar = input("Tentar Novamente digite '0', Recuperar a senha digite '1', Encerrar digite '2': ")
                         if voltar.isdigit() == True:
                             voltar = int(voltar[0])
                         else:
@@ -527,7 +527,7 @@ def Logar(usuarios):
                 while2 = 0
                 while while2 == 0:
                     print("\nO que você deseja fazer?")
-                    voltar = input("Tentar Novamente digite '0', Cadastrar-se digite '1'. Encerrar digite '2': ")
+                    voltar = input("Tentar Novamente digite '0', Cadastrar-se digite '1', Encerrar digite '2': ")
                     if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
@@ -546,18 +546,23 @@ def Logar(usuarios):
 def Cadastrar(usuarios):
     global cadastro
     global cod
+    global caracteres_permitidos_no_cpf
+    global cpflist
     global caracteres_permitidos_no_email
     global caracteres_permitidos_no_nome
     global nome_completo_resultante
     global emailresultante
     global caracteres_nao_permitidos_no_nome
-    global string_1
+    global stringresultante_1
+    global caracteres_nao_permitidos_no_cpf
 
-    caracteres_permitidos_no_email = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    caracteres_nao_permitidos_no_cpf = []
+    caracteres_permitidos_no_cpf = [',', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    caracteres_permitidos_no_email = [',', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     caracteres_permitidos_no_nome = ['\'', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ']
     caracteres_nao_permitidos_no_nome = ""
     nome_completo_resultante = ""
-    string_1 = ""
+    stringresultante_1 = ""
     cod = 0
     cadastro = """
     
@@ -577,32 +582,73 @@ CPF: """
 
     while True:
         cpf = input(cadastro)
+
+        while len(cpf) < 11:
+            cpf = input("O número do CPF deve conter pelo menos 11 numeros. Tente novamente:\nCPF:")            
+        while cpf.islower():
+            cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+        while cpf.isupper():
+            cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+        while cpf.isalpha():
+            cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+        while True:
+
+            converter_string_em_lista(cpf)
+
+            lista1 = []
+            lista1 = lista
+
+            caracteres_nao_permitidos_no_cpf = [x for x in lista1 if x not in caracteres_permitidos_no_cpf]
+
+            if len(caracteres_nao_permitidos_no_cpf) == 0:
+                converter_lista_em_string(lista1)
+                cpf = stringresultante
+
+                if str(cpf).isdecimal() == False:
+                    if cpf.find(",") > 0 or cpf.find(".") > 0 or cpf.find("-") > 0 or cpf.find(" ") > 0:
+                        try: cpf = cpf.replace(",","")
+                        except: cpf = cpf
+                        try: cpf = cpf.replace(".","")
+                        except: cpf = cpf
+                        try: cpf = cpf.replace("-","")
+                        except: cpf = cpf
+                        try: cpf = cpf.replace(" ","")
+                        except: cpf = cpf
+                        break
+                else:
+                    break
+            else:
+                cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+
         usuario = filtrar_cpf(cpf, usuarios)
 
-
         if usuario:
-            while2 = 0
-            while while2 == 0:
-                print("\nCPF já cadastrado. O que você deseja fazer?")
-                voltar = input("Fazer Login digite '0', Recuperar a Senha digite '1'. Encerrar digite '2': ")
-                if voltar.isdigit() == True:
-                    voltar = int(voltar[0])
-                else:
-                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+
+                while2 = 0
+                while while2 == 0:
+                    print("\nCPF já cadastrado. O que você deseja fazer?")
+                    voltar = input("Fazer Login digite '0', Recuperar a Senha digite '1', Voltar ao cadastro '2', Encerrar digite '3': ")
+                    if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
-                        print("\nDigite apenas valores númericos")
-                        voltar = 100
-                if voltar == 0:
-                    Logar(usuarios)
-                elif voltar == 1:
-                    recuperar_senha(usuarios)
-                elif voltar == 2:
-                    Sair()
-                else:
-                    continue
-        
 
+                        if voltar.find(",") > 0 or voltar.find(".") > 0:
+                            voltar = int(voltar[0])
+                        else:
+                            print("\nDigite apenas valores númericos")
+                            voltar = 100
+                    if voltar == 0:
+                        Logar(usuarios)
+                    elif voltar == 1:
+                        recuperar_senha(usuarios)
+                    elif voltar == 2:
+                        Cadastrar(usuarios)
+                    elif voltar == 3:
+                        Sair()
+                    else:
+                        continue
+
+        
         while True:
             nome_completo = input('Nome Completo: ')
             converter_string_em_lista(nome_completo)
@@ -614,7 +660,7 @@ CPF: """
 
             if len(caracteres_nao_permitidos_no_nome) == 0:
                 converter_lista_em_string(lista1)
-                nome_completo_resultante = string
+                nome_completo_resultante = stringresultante
 
                 global buscar_espaco
                 global buscar_espaco_1
@@ -671,7 +717,10 @@ Senha:"""))
             while senha.isalpha():
                 senha = input("A senha deve conter pelo menos um número. Tente novamente:\nSenha:")
             while senha.isalnum():
-                senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:")    
+
+                senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:") 
+
+
             repetirsenha = input("Repita a senha para confirmar: ")
             if senha == repetirsenha:
                 cod = cod + 1
@@ -680,8 +729,8 @@ Senha:"""))
                 while2 = 0
                 
                 while while2 == 0:
-                    print("Os dados estão corretos?")  
-                    opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
+                    print("Confirma os dados?")  
+                    opcao = input("Confirmar Dados digite '0', Editar Dados digite '1', Encerrar digite '2': ")
                     if opcao.isdigit() == True:
                         if int(opcao) <= int(2):
                             opcao = int(opcao[0])
@@ -727,7 +776,7 @@ Senha:"""))
                     continue
             else:
                 print("\nSenhas não conferem")
-                continue 
+                continue
 
 def filtrar_cpf(cpf, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf]
@@ -737,21 +786,21 @@ def filtrar_nome_completo_e_email(nome_completo, email, senha, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["Nome Completo"] == nome_completo and usuario["E-mail"] == email]
     return usuarios_filtrados[0] if usuarios_filtrados else None
 
-def converter_string_em_lista(string):
+def converter_string_em_lista(stringresultante):
     global lista
     lista = []
-    for elemento in string:
+    for elemento in stringresultante:
        lista.append(str(elemento))
     return lista
 
 def converter_lista_em_string(lista):
-    global string
-    string = ""
+    global stringresultante
+    stringresultante = ""
     x = 0
     while x < len(lista):
-        string = string + lista[x]
+        stringresultante = stringresultante + lista[x]
         x += 1
-    return string
+    return stringresultante
 
 def filtrar_email_ou_cpf(cpf, email, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf or usuario["E-mail"] == email]
