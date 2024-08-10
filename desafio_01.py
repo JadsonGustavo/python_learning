@@ -655,14 +655,29 @@ CPF: """
                 continue
 
         while True:
-            senha = input("Digite uma senha: ")
+            senha = str(input("""Digite uma  senha com os seguintes critérios:"
+            - Ao menos 8 digitos
+            - Ao menos uma letra MAIÚSCULA(A à Z)
+            - Ao menos um número de (0 à 9)
+            - Ao menos um caractere especial(!@#$%¨&*):"""))
+            
+            while senha.islower():
+                senha = input("A Senha deve ter pelo menos .:Um caracter MAIUSCULO:\n")
+            while len(senha) <=7:
+                senha = input("A Senha deve ter pelo menos .:8 caracteres:\n")
+            while senha.isalpha():
+                senha = input("A senha necessita de pelo menos .:Um número :\n")
+            while senha.isalnum():
+                senha = input("A Senha também necessita de pelo menos .:Um caracter especial\n")   
+            while senha.isupper():
+                senha = input("A Senha também necessita de pelo menos .:Um caracter MINUSCULO\n")    
             repetirsenha = input("Repita a senha: ")
-
             if senha == repetirsenha:
                 cod = cod + 1
                 print(f'\nCPF: {cpf}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
-     
+                
                 while2 = 0
+                
                 while while2 == 0:
                     print("Os dados estão corretos?")  
                     opcao = input("Confirmar Dados digite '0', Editar Dados digite '1'. Encerrar digite '2': ")
@@ -710,7 +725,7 @@ CPF: """
                         exit()
                     continue
             else:
-                print("\nSenhas não conferem")
+                print("\nSenhas não conferem. Tente novamente.")
                 continue 
 
 def filtrar_cpf(cpf, usuarios):
