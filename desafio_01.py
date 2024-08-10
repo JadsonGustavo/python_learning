@@ -553,6 +553,7 @@ def Cadastrar(usuarios):
     global caracteres_nao_permitidos_no_nome
     global string_1
 
+    caracteres_permitidos_no_cpf = ['.', '-']
     caracteres_permitidos_no_email = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     caracteres_permitidos_no_nome = ['\'', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ']
     caracteres_nao_permitidos_no_nome = ""
@@ -577,38 +578,51 @@ CPF: """
 
     while True:
         cpf = input(cadastro)
+
+        while len(cpf) < 11:
+            cpf = input("O número do CPF deve conter pelo menos 11 numeros. Tente novamente:\nCPF:")            
+        while cpf.islower():
+            cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+        while cpf.isupper():
+            cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
+        while cpf.isalpha():
+            cpf = input("O CPF deve conter pelo menos um número. Tente novamente:\nCPF:")
+        
+        if cpf.find(",") > 0 or cpf.find(".") > 0:
+            try: cpf = cpf.replace(",","")
+            except: cpf = cpf
+            try: cpf = cpf.replace(".","")
+            except: cpf = cpf
+            try: cpf = cpf.replace("-","")
+            except: cpf = cpf
+
         usuario = filtrar_cpf(cpf, usuarios)
 
-        while len(usuario) < 11:
-            usuario = input("O número do CPF deve conter pelo menos 11 numeros. Tente novamente:\nSenha:")            
-        while usuario.isalpha():
-            usuario = input("O número do CPF não deve conter outros caracteres além de número. Tente novamente:\nSenha:")
-        while usuario.isalnum():
-            usuario = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:")    
-        
         if usuario:
-            while2 = 0
-            while while2 == 0:
-                print("\nCPF já cadastrado. O que você deseja fazer?")
-                voltar = input("Fazer Login digite '0', Recuperar a Senha digite '1'. Encerrar digite '2': ")
-                if voltar.isdigit() == True:
-                    voltar = int(voltar[0])
-                else:
-                    if voltar.find(",") > 0 or voltar.find(".") > 0:
+
+                while2 = 0
+                while while2 == 0:
+                    print("\nCPF já cadastrado. O que você deseja fazer?")
+                    voltar = input("Fazer Login digite '0', Recuperar a Senha digite '1', Voltar ao cadastro '2', Encerrar digite '3': ")
+                    if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
-                        print("\nDigite apenas valores númericos")
-                        voltar = 100
-                if voltar == 0:
-                    Logar(usuarios)
-                elif voltar == 1:
-                    recuperar_senha(usuarios)
-                elif voltar == 2:
-                    Sair()
-                else:
-                    continue
+                        if voltar.find(",") > 0 or voltar.find(".") > 0:
+                            voltar = int(voltar[0])
+                        else:
+                            print("\nDigite apenas valores númericos")
+                            voltar = 100
+                    if voltar == 0:
+                        Logar(usuarios)
+                    elif voltar == 1:
+                        recuperar_senha(usuarios)
+                    elif voltar == 2:
+                        Cadastrar(usuarios)
+                    elif voltar == 3:
+                        Sair()
+                    else:
+                        continue
         
-
         while True:
             nome_completo = input('Nome Completo: ')
             converter_string_em_lista(nome_completo)
@@ -677,7 +691,8 @@ Senha:"""))
             while senha.isalpha():
                 senha = input("A senha deve conter pelo menos um número. Tente novamente:\nSenha:")
             while senha.isalnum():
-                senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:")    
+                senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:") 
+
             repetirsenha = input("Repita a senha para confirmar: ")
             if senha == repetirsenha:
                 cod = cod + 1
@@ -733,7 +748,7 @@ Senha:"""))
                     continue
             else:
                 print("\nSenhas não conferem")
-                continue 
+                continue
 
 def filtrar_cpf(cpf, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["CPF"] == cpf]
