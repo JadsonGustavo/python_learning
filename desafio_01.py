@@ -631,6 +631,7 @@ CPF: """
                     if voltar.isdigit() == True:
                         voltar = int(voltar[0])
                     else:
+
                         if voltar.find(",") > 0 or voltar.find(".") > 0:
                             voltar = int(voltar[0])
                         else:
@@ -646,6 +647,7 @@ CPF: """
                         Sair()
                     else:
                         continue
+
         
         while True:
             nome_completo = input('Nome Completo: ')
@@ -715,7 +717,9 @@ Senha:"""))
             while senha.isalpha():
                 senha = input("A senha deve conter pelo menos um número. Tente novamente:\nSenha:")
             while senha.isalnum():
+
                 senha = input("A senha deve conter pelo menos um caracter especial. Tente novamente:\nSenha:") 
+
 
             repetirsenha = input("Repita a senha para confirmar: ")
             if senha == repetirsenha:
@@ -832,4 +836,4 @@ def Iniciar():
         else:
             print("\nOperação inválida, por favor selicione uma opção válida.")
             continue
-Iniciar()
+Iniciar(
