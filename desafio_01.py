@@ -836,4 +836,4 @@ def Iniciar():
         else:
             print("\nOperação inválida, por favor selicione uma opção válida.")
             continue
-Iniciar(
+Iniciar()
