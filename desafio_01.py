@@ -548,6 +548,7 @@ def Cadastrar(usuarios):
     global cod
     global caracteres_permitidos_no_cpf
     global cpflist
+    global cpfformatado    
     global caracteres_permitidos_no_email
     global caracteres_permitidos_no_nome
     global nome_completo_resultante
@@ -564,6 +565,7 @@ def Cadastrar(usuarios):
     nome_completo_resultante = ""
     stringresultante_1 = ""
     cod = 0
+    cpfformatado =""
     cadastro = """
     
 
@@ -584,7 +586,9 @@ CPF: """
         cpf = input(cadastro)
 
         while len(cpf) < 11:
-            cpf = input("O número do CPF deve conter pelo menos 11 numeros. Tente novamente:\nCPF:")            
+            cpf = input("O número do CPF deve conter 11 numeros. Tente novamente:\nCPF:")
+        while len(cpf) > 11:
+            cpf = input("O número do CPF deve conter 11 numeros. Tente novamente:\nCPF:")              
         while cpf.islower():
             cpf = input("O CPF deve conter apenas números. Tente novamente:\nCPF:")
         while cpf.isupper():
@@ -614,6 +618,7 @@ CPF: """
                         except: cpf = cpf
                         try: cpf = cpf.replace(" ","")
                         except: cpf = cpf
+
                         break
                 else:
                     break
@@ -623,7 +628,6 @@ CPF: """
         usuario = filtrar_cpf(cpf, usuarios)
 
         if usuario:
-
                 while2 = 0
                 while while2 == 0:
                     print("\nCPF já cadastrado. O que você deseja fazer?")
@@ -659,6 +663,13 @@ CPF: """
             if len(caracteres_nao_permitidos_no_nome) == 0:
                 converter_lista_em_string(lista1)
                 nome_completo_resultante = stringresultante
+                nome_completo = nome_completo.title()
+                nome_completo = nome_completo.replace("Da", "da")
+                nome_completo = nome_completo.replace("De", "de")
+                nome_completo = nome_completo.replace("Do", "do")
+                nome_completo = nome_completo.replace("Das", "das")
+                nome_completo = nome_completo.replace("Des", "des")
+                nome_completo = nome_completo.replace("Dos", "dos")
 
                 global buscar_espaco
                 global buscar_espaco_1
@@ -683,6 +694,7 @@ CPF: """
 
         while True:
             email = input('E-mail: ')
+            email = email.lower()
             converter_string_em_lista(email)
 
             lista1 = []
@@ -720,7 +732,8 @@ Senha:"""))
             repetirsenha = input("Repita a senha para confirmar: ")
             if senha == repetirsenha:
                 cod = cod + 1
-                print(f'\nCPF: {cpf}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
+                cpfformatado = cpf[0:3]+"."+cpf[3:6]+"."+cpf[6:9]+"-"+cpf[9:11]
+                print(f'\nCPF: {cpfformatado}, Nome Completo:{nome_completo}, E-mail: {email}, Senha: {senha}\n')
                 
                 while2 = 0
                 
